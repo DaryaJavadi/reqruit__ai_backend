@@ -500,6 +500,7 @@ const upload = multer({
     }
 });
 
+
 // Initialize SQLite database (configurable via env)
 const dataDir = path.join('/opt/render/data', 'cv_parser_pro');
 if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });

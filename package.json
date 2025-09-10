@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "build": "npm install",
-    "postinstall": "npm rebuild sqlite3 --build-from-source",
+    "postinstall": "npm rebuild sqlite3 --build-from-source && python --version || echo 'Python not found'",
     "dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
