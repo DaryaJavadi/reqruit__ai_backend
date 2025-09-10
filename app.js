@@ -1283,6 +1283,12 @@ app.get("/api/hello", (req, res) => {
   res.json({ message: "Hello from API!" });
 });
 
+app.get("/", (req, res) => {
+  res.json({ status: "Backend running", apiBase: "/api" });
+});
+
+app.get("/favicon.ico", (req, res) => res.status(204).end());
+
 // Health check with detailed status
 app.get('/api/health', (req, res) => {
   res.json({
