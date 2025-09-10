@@ -31,8 +31,10 @@ try {
 const app = express();
 
 app.use(cors({
-    origin: process.env.FRONTEND_URL,
-    methods: ["GET","POST","DELETE"],
+    origin: [
+        'https://reqruit-ai-frontend.onrender.com', // frontend URL
+    ],
+    methods: ["GET", "POST", "DELETE"],
     credentials: true
 }));
 
