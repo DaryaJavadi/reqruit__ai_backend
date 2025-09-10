@@ -2,17 +2,13 @@
 require('dotenv').config();
 
 const express = require('express');
+const cors = require('cors');
 const { IntelligentCandidateMatcher } = require('./candidate-matcher');
 const multer = require('multer');
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const fs = require('fs');
-const cors = require('cors');
-app.use(cors({
-    origin: process.env.FRONTEND_URL,
-    methods: ["GET","POST","DELETE"],
-    credentials: true
-}));
+
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const { spawn } = require('child_process');
 const CVExcelExporter = require('./excel_exporter');
@@ -31,9 +27,22 @@ try {
 } catch (e) {
     console.warn('⚠️ pdfjs-dist not installed; PDF link annotations will not be extracted.');
 }
-const rateLimit = require('express-rate-limit');
 
 const app = express();
+
+app.use(cors({
+    origin: process.env.FRONTEND_URL,
+    methods: ["GET","POST","DELETE"],
+    credentials: true
+}));
+
+const rateLimit = require('express-rate-limit');
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 200,
+    message: { error: 'Too many requests, please try again later' }
+});
+
 app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3000;
 
@@ -302,17 +311,13 @@ function resetMinuteCounter() {
 setInterval(resetMinuteCounter, 60 * 1000);
 
 // Rate limiting - more generous for development
-const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 200, // Increased limit
-    message: { error: 'Too many requests, please try again later' }
-});
+
 
 // Middleware
-app.use(cors({
-    origin: ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://localhost:5173', 'http://127.0.0.1:5173'],
-    credentials: true
-}));
+// app.use(cors({
+//     origin: ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://localhost:5173', 'http://127.0.0.1:5173'],
+//     credentials: true
+// }));
 app.use(express.json({ limit: '100mb' })); // Increased limit
 app.use(express.urlencoded({ extended: true, limit: '100mb' }));
 // app.use(express.static('public'));
