@@ -8,6 +8,11 @@ const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const fs = require('fs');
 const cors = require('cors');
+app.use(cors({
+    origin: process.env.FRONTEND_URL,
+    methods: ["GET","POST","DELETE"],
+    credentials: true
+}));
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const { spawn } = require('child_process');
 const CVExcelExporter = require('./excel_exporter');
